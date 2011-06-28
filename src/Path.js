@@ -1,5 +1,6 @@
-// Path.js
-// 
+// Path.js - simle SVG Path representation in JavaScript
+// Copyright 2011 Jeff Remer - MIT Licensed, see 'LICENSE'
+// Source available on [Github](https://github.com/jeffremer/path.js).
 
 (function(){
 	// Path
