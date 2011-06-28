@@ -63,6 +63,8 @@
 		path.commands = this.commands;
 		return path;
 	};
+
+	var nativeMap = Array.prototype.map;
     
 	// map
 	// ===
@@ -71,8 +73,12 @@
 	// path with the transformed points and the commands.
 	Path.prototype.map = function(iterator, context) {
 		var result = [];
-		for(var ix = 0, lx = this.length; ix < lx; ix++) {
-			result.push(iterator.call((context||this), this[ix]))
+		if(nativeMap) {
+			result = nativeMap.apply((context||this), [iterator, (context||this)]);
+		} else {
+			for(var ix = 0, lx = this.length; ix < lx; ix++) {
+				result.push(iterator.call((context||this), this[ix]))
+			}			
 		}
 		var path = new Path(result);
 		path.commands = this.commands;
@@ -105,11 +111,7 @@
 	// Slice returns a sub-path consisting of a slice of the points
 	// and corresponding slice of the commands if they exist.
 	Path.prototype.slice = function(begin, end) {
-		end || (end = this.length);
-		var result = [];
-		for(var ix = begin, lx = end; ix < lx; ix++) {
-			result.push(this[ix]);
-		}
+		var result = Array.prototype.slice.apply(this, [begin, end]);
 		var commands = this.commands.slice(begin, end);
 		var path = new Path(result);
 		path.commands = commands;

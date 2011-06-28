@@ -61,7 +61,8 @@ describe("Path", function() {
 		path = new Path(pathStr);
 		var sliced = path.slice(2);
 		expect(sliced).toBePath();
-		expect(sliced.length).toEqual(2)
+		expect(sliced.length).toEqual(2) // [[10,20],[6,10]]
+		expect(sliced.commands.length).toEqual(3) // [l, l, z]		
 	}); 
 	
 	it("#toString should return a SVG path string", function(){
