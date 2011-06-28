@@ -41,8 +41,10 @@
 	// Returns a string representation of a SVG Path data attribute.
 	// It zips the commands in with the points if they exist, otherwise
 	// It assumes the first point is a moveto and the rest are absolute
-	// lineto commands. Then it ensures that the last command closes the path.
-	Path.prototype.toString = function() {
+	// lineto commands.
+	// 
+	// The closePath parameter it ensures that the last command closes the path.
+	Path.prototype.toString = function(closePath) {
 		var str = [];
 		for(var ix = 0, lx = this.length; ix < lx; ix++) {
 			var command = this.commands[ix] || (ix === 0 ? 'M' : 'L');
@@ -50,7 +52,7 @@
 			var instruction = command === 'z' ? command : [command, point].join(' ');
 			str.push(instruction);		
 		}
-		if(command !== 'z') str.push('z');
+		if(closePath && command !== 'z') str.push('z');
 		return str.join(' ')
 	};
     
@@ -129,17 +131,20 @@
 	    var matches = pathString.match(/[MLlz]\s*((\d+|\d+\.\d*|\.\d+)(\s*|\s+?\s*)?)*/g);
 		// Only M L l z commands are accepted.
 	    if (pathString.match(/[^MLlz\d\s]/g)) throw new Error("Invalid path " + pathString);
+		if (pathString.match(/z.+/)) throw new Error("Closepath may only appear at the end of a path")
 
 		var commands = [], commandArgs = [];
 		// Iterate all the instructions, match the arguments to each command and populate the
 		// points and the commands.
-	    for(var i = 0; i < matches.length; i++) {
-	        var part = matches[i],
+	    for(var ix = 0; ix < matches.length; ix++) {
+	        var part = matches[ix],
 	        	command = part.charAt(0),
 	        	args = part.match(/[+\-]?(\.\d+|\d+\.\d*|\d+)([Ee][+\-]?\d+)?/g) || [],
 	        	values = [];
+	
+			if(command === 'M' && ix > 0) throw new Error("Moveto may only appear at the beginning of a path");
 
-            for(var j = 0; j < args.length; j++) values[j] = Number(args[j]);
+            for(var jx = 0, ljx = args.length; jx < ljx; jx++) values[jx] = Number(args[jx]);
 
 			commands.push(command);
 
@@ -149,5 +154,5 @@
 	}
 	
 	// Make it so.
-	window.Path = Path;	
+	typeof exports != 'undefined' ? exports.Path = Path : this.Path = Path;
 })();
