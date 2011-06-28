@@ -34,10 +34,10 @@ path.commands // [M, L, l, z]
 ...
 ```
 
-Compatability
+Compatibility
 ==============
 
-Node.js/CommonJS compatible. For example:
+In addition to modern browsers Path.js is Node.js/CommonJS compatible. For example:
 
 ```javascript
 var Path = require('./path.js').Path;
