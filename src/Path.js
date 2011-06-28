@@ -113,8 +113,10 @@
 	// Slice returns a sub-path consisting of a slice of the points
 	// and corresponding slice of the commands if they exist.
 	Path.prototype.slice = function(begin, end) {
-		var result = Array.prototype.slice.apply(this, [begin, end]);
-		var commands = this.commands.slice(begin, end);
+		var args = [begin];
+		if(end) args.push(end);
+		var result = Array.prototype.slice.apply(this, args);
+		var commands = Array.prototype.slice.apply(this.commands, args);
 		var path = new Path(result);
 		path.commands = commands;
 		return path;
