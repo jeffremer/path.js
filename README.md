@@ -16,6 +16,8 @@ Documentation
 
 See this `README` or the [project page](http://jeffremer.com/path.js) for documentation.
 
+Run `rake rocco` to generate source documentation under `docs`.
+
 Usage
 ======
 
