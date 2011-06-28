@@ -160,10 +160,12 @@ To the prototype chain it&rsquo;ll look like Array subclasses Path</p>
 <p>Returns a string representation of a SVG Path data attribute.
 It zips the commands in with the points if they exist, otherwise
 It assumes the first point is a moveto and the rest are absolute
-lineto commands. Then it ensures that the last command closes the path.</p>
+lineto commands.</p>
+
+<p>The closePath parameter it ensures that the last command closes the path.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">closePath</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">str</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">lx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">ix</span> <span class="o">&lt;</span> <span class="nx">lx</span><span class="p">;</span> <span class="nx">ix</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">command</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">[</span><span class="nx">ix</span><span class="p">]</span> <span class="o">||</span> <span class="p">(</span><span class="nx">ix</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">?</span> <span class="s1">&#39;M&#39;</span> <span class="o">:</span> <span class="s1">&#39;L&#39;</span><span class="p">);</span>
@@ -171,7 +173,7 @@ lineto commands. Then it ensures that the last command closes the path.</p>
       <span class="kd">var</span> <span class="nx">instruction</span> <span class="o">=</span> <span class="nx">command</span> <span class="o">===</span> <span class="s1">&#39;z&#39;</span> <span class="o">?</span> <span class="nx">command</span> <span class="o">:</span> <span class="p">[</span><span class="nx">command</span><span class="p">,</span> <span class="nx">point</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
       <span class="nx">str</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">instruction</span><span class="p">);</span>		
     <span class="p">}</span>
-    <span class="k">if</span><span class="p">(</span><span class="nx">command</span> <span class="o">!==</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span> <span class="nx">str</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">closePath</span> <span class="o">&amp;&amp;</span> <span class="nx">command</span> <span class="o">!==</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span> <span class="nx">str</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">);</span>
     <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
   <span class="p">};</span>
     </pre></div>
@@ -317,6 +319,7 @@ and corresponding slice of the commands if they exist.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">pathString</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/[^MLlz\d\s]/g</span><span class="p">))</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Invalid path &quot;</span> <span class="o">+</span> <span class="nx">pathString</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">pathString</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/z.+/</span><span class="p">))</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Closepath may only appear at the end of a path&quot;</span><span class="p">)</span>
 
     <span class="kd">var</span> <span class="nx">commands</span> <span class="o">=</span> <span class="p">[],</span> <span class="nx">commandArgs</span> <span class="o">=</span> <span class="p">[];</span></pre></div>
       </td>
@@ -330,13 +333,15 @@ and corresponding slice of the commands if they exist.</p>
 points and the commands.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">matches</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">part</span> <span class="o">=</span> <span class="nx">matches</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+        <div class='highlight'><pre>      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">ix</span> <span class="o">&lt;</span> <span class="nx">matches</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">ix</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">part</span> <span class="o">=</span> <span class="nx">matches</span><span class="p">[</span><span class="nx">ix</span><span class="p">],</span>
           	<span class="nx">command</span> <span class="o">=</span> <span class="nx">part</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
           	<span class="nx">args</span> <span class="o">=</span> <span class="nx">part</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/[+\-]?(\.\d+|\d+\.\d*|\d+)([Ee][+\-]?\d+)?/g</span><span class="p">)</span> <span class="o">||</span> <span class="p">[],</span>
           	<span class="nx">values</span> <span class="o">=</span> <span class="p">[];</span>
+  
+      <span class="k">if</span><span class="p">(</span><span class="nx">command</span> <span class="o">===</span> <span class="s1">&#39;M&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">ix</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Moveto may only appear at the beginning of a path&quot;</span><span class="p">);</span>
 
-            <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="nx">values</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="nx">j</span><span class="p">]);</span>
+            <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">jx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">ljx</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">jx</span> <span class="o">&lt;</span> <span class="nx">ljx</span><span class="p">;</span> <span class="nx">jx</span><span class="o">++</span><span class="p">)</span> <span class="nx">values</span><span class="p">[</span><span class="nx">jx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="nx">jx</span><span class="p">]);</span>
 
       <span class="nx">commands</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">command</span><span class="p">);</span>
 
@@ -356,7 +361,7 @@ points and the commands.</p>
 
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="nb">window</span><span class="p">.</span><span class="nx">Path</span> <span class="o">=</span> <span class="nx">Path</span><span class="p">;</span>	
+        <div class='highlight'><pre>  <span class="k">typeof</span> <span class="nx">exports</span> <span class="o">!=</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">Path</span> <span class="o">=</span> <span class="nx">Path</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">Path</span> <span class="o">=</span> <span class="nx">Path</span><span class="p">;</span>
 <span class="p">})();</span></pre></div>
       </td>
     </tr>
