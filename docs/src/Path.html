@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>Path.js</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>Path.js</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p>Path.js</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="p">(</span><span class="kd">function</span><span class="p">(){</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Path'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Path">&#182;</a>
+        </div>
+        <h1>Path</h1>
+
+<p>Contructor accepts an array of points or a string representing
+part of an SVG Path data attribute, for example:</p>
+
+<pre><code>var path = new Path([[0,0], [0,10], [0, 20]])
+
+var path = new Path(&ldquo;M 0 10 L 100 200 l 10 20 l 6 10 z&rdquo;)
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="kd">function</span> <span class="nx">Path</span><span class="p">()</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The constructor starts with a array object to subclass</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[];</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>Parse the path, if it&rsquo;s an array it just returns back the same data</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>If there are commands they&rsquo;ll come back as an option</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kd">var</span> <span class="nx">commands</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">commands</span><span class="p">;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>Store the points on the array itself.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">arr</span><span class="p">.</span><span class="nx">push</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">points</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>Make sure that the top level prototype is the Path object
+To the prototype chain it&rsquo;ll look like Array subclasses Path</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">arr</span><span class="p">.</span><span class="nx">__proto__</span> <span class="o">=</span> <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>Assign the commands array or add a blank one.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="nx">arr</span><span class="p">.</span><span class="nx">commands</span> <span class="o">=</span> <span class="nx">commands</span> <span class="o">||</span> <span class="p">[];</span>
+    
+    <span class="k">return</span> <span class="nx">arr</span><span class="p">;</span>
+  <span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>Add the rest of the Array methods to the Path class.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">;</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-toString'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-toString">&#182;</a>
+        </div>
+        <h1>toString</h1>
+
+<p>Returns a string representation of a SVG Path data attribute.
+It zips the commands in with the points if they exist, otherwise
+It assumes the first point is a moveto and the rest are absolute
+lineto commands. Then it ensures that the last command closes the path.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">str</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">lx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">ix</span> <span class="o">&lt;</span> <span class="nx">lx</span><span class="p">;</span> <span class="nx">ix</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">command</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">[</span><span class="nx">ix</span><span class="p">]</span> <span class="o">||</span> <span class="p">(</span><span class="nx">ix</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">?</span> <span class="s1">&#39;M&#39;</span> <span class="o">:</span> <span class="s1">&#39;L&#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">point</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">ix</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">instruction</span> <span class="o">=</span> <span class="nx">command</span> <span class="o">===</span> <span class="s1">&#39;z&#39;</span> <span class="o">?</span> <span class="nx">command</span> <span class="o">:</span> <span class="p">[</span><span class="nx">command</span><span class="p">,</span> <span class="nx">point</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+      <span class="nx">str</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">instruction</span><span class="p">);</span>		
+    <span class="p">}</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">command</span> <span class="o">!==</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span> <span class="nx">str</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+  <span class="p">};</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-clone'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-clone">&#182;</a>
+        </div>
+        <h1>clone</h1>
+
+<p>Creates a new copy of this path.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">clone</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Path</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">commands</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">path</span><span class="p">;</span>
+  <span class="p">};</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-map'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-map">&#182;</a>
+        </div>
+        <h1>map</h1>
+
+<p>Iterate all the points in the Path and return a new
+path with the transformed points and the commands.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">map</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">iterator</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">lx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">ix</span> <span class="o">&lt;</span> <span class="nx">lx</span><span class="p">;</span> <span class="nx">ix</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">iterator</span><span class="p">.</span><span class="nx">call</span><span class="p">((</span><span class="nx">context</span><span class="o">||</span><span class="k">this</span><span class="p">),</span> <span class="k">this</span><span class="p">[</span><span class="nx">ix</span><span class="p">]))</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Path</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">commands</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">path</span><span class="p">;</span>	
+  <span class="p">};</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-filter'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-filter">&#182;</a>
+        </div>
+        <h1>filter</h1>
+
+<p>Iterate all the points in the Path and return a new
+path with the points that fast the filter test and the original
+commands the corresponded with the passing points.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="nx">Path</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">filter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">iterator</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="kd">var</span> <span class="nx">commands</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">ix</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">lx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">ix</span> <span class="o">&lt;</span> <span class="nx">lx</span><span class="p">;</span> <span class="nx">ix</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span><span class="p">(</span><span class="nx">iterator</span><span class="p">.</span><span class="nx">call</span><span class="p">((</span><span class="nx">context</span><span class="o">||</span><span class="k">this</span><span class="p">),</span> <span class="k">this</span><span class="p">[</span><span class="nx">ix</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">[</span><span class="nx">ix</span><span class="p">]);</span>
+        <span class="nx">commands</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">[</span><span class="nx">ix</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Path</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">commands</span> <span class="o">=</span> <span class="nx">commands</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">path</span><span class="p">;</span>
+  <span class="p">};</span>	
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-parsePath'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-parsePath">&#182;</a>
+        </div>
+        <h2>parsePath</h2>
+
+<p>Private parsePath implementation parses String paths</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="kd">function</span> <span class="nx">parsePath</span><span class="p">(</span><span class="nx">pathString</span><span class="p">)</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-15">&#182;</a>
+        </div>
+        <p>If the path is already an array just return it back.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">if</span><span class="p">(</span><span class="nx">pathString</span> <span class="k">instanceof</span> <span class="nb">Array</span><span class="p">)</span> <span class="k">return</span> <span class="p">{</span><span class="nx">points</span><span class="o">:</span> <span class="nx">pathString</span><span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-16'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-16">&#182;</a>
+        </div>
+        <p>Match all the instructions</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="kd">var</span> <span class="nx">matches</span> <span class="o">=</span> <span class="nx">pathString</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/[MLlz]\s*((\d+|\d+\.\d*|\.\d+)(\s*|\s+?\s*)?)*/g</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-17">&#182;</a>
+        </div>
+        <p>Only M L l z commands are accepted.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">pathString</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/[^MLlz\d\s]/g</span><span class="p">))</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Invalid path &quot;</span> <span class="o">+</span> <span class="nx">pathString</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">commands</span> <span class="o">=</span> <span class="p">[],</span> <span class="nx">commandArgs</span> <span class="o">=</span> <span class="p">[];</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-18'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-18">&#182;</a>
+        </div>
+        <p>Iterate all the instructions, match the arguments to each command and populate the
+points and the commands.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">matches</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">part</span> <span class="o">=</span> <span class="nx">matches</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+          	<span class="nx">command</span> <span class="o">=</span> <span class="nx">part</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+          	<span class="nx">args</span> <span class="o">=</span> <span class="nx">part</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/[+\-]?(\.\d+|\d+\.\d*|\d+)([Ee][+\-]?\d+)?/g</span><span class="p">)</span> <span class="o">||</span> <span class="p">[],</span>
+          	<span class="nx">values</span> <span class="o">=</span> <span class="p">[];</span>
+
+            <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="nx">values</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">args</span><span class="p">[</span><span class="nx">j</span><span class="p">]);</span>
+
+      <span class="nx">commands</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">command</span><span class="p">);</span>
+
+      <span class="k">if</span><span class="p">(</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="nx">commandArgs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">values</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nx">points</span><span class="o">:</span> <span class="nx">commandArgs</span><span class="p">,</span> <span class="nx">commands</span><span class="o">:</span> <span class="nx">commands</span><span class="p">};</span>
+  <span class="p">}</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-19">&#182;</a>
+        </div>
+        <p>Make it so.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="nb">window</span><span class="p">.</span><span class="nx">Path</span> <span class="o">=</span> <span class="nx">Path</span><span class="p">;</span>	
+<span class="p">})();</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
