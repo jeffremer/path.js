@@ -2,7 +2,31 @@ Path.js
 ========
 
 This is a simple implementation of a JavaScript representation of
-SVG Path objects.
+SVG Path objects. It satisfies these requirements:
+
+* Subclasses Array and array methods work as expected on the path points
+* The constructor accepts an array of points ([x,y]) or a simplified SVG Path string 
+* `clone`, `map`, `filter`, `slice` all return new Path objects, not Arrays
+* `toString` returns the SVG Path as expected in a Path data attribute
+
+
+Documentation
+==============
+
+See this `README` or the [project page](http://jeffremer.com/path.js) for documentation.
+
+Usage
+======
+
+See the [project page documentation](http://jeffremer.com/path.js) for examples.
+
+Otherwise:
+
+```javascript
+
+var path = new Path("M 1 2 L 3 4 l 1 2 z");
+
+```
 
 Tests
 =======
