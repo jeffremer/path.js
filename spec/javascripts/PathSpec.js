@@ -44,6 +44,7 @@ describe("Path", function() {
 			return [point[0] / 2, point[1] / 2]
 		});
 		expect(mapped).toBePath();
+		expect(mapped).not.toEqual(path);
 		expect(mapped.toString()).toEqual(new Path(halfPathStr).toString());
 	});
 	
@@ -53,12 +54,14 @@ describe("Path", function() {
 			return (point[0] < 30) && (point[1] < 30)
 		});
 		expect(filtered).toBePath();
+		expect(filtered).not.toEqual(path);
 	});
 
    	it("#slice should return a new Path", function(){
 		path = new Path(pathStr);
-		var sliced = path.clone();
+		var sliced = path.slice(2);
 		expect(sliced).toBePath();
+		expect(sliced.length).toEqual(2)
 	}); 
 	
 	it("#toString should return a SVG path string", function(){

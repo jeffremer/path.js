@@ -1,5 +1,7 @@
 // Path.js - simle SVG Path representation in JavaScript
-// Copyright 2011 Jeff Remer - MIT Licensed, see 'LICENSE'
+
+// Copyright 2011 Jeff Remer - MIT Licensed, see [LICENSE](https://github.com/jeffremer/path.js/blob/master/LICENSE).
+
 // Source available on [Github](https://github.com/jeffremer/path.js).
 
 (function(){
@@ -95,7 +97,24 @@
 		var path = new Path(result);
 		path.commands = commands;
 		return path;
-	};	
+	};
+	
+	// slice
+	// =====	
+	//
+	// Slice returns a sub-path consisting of a slice of the points
+	// and corresponding slice of the commands if they exist.
+	Path.prototype.slice = function(begin, end) {
+		end || (end = this.length);
+		var result = [];
+		for(var ix = begin, lx = end; ix < lx; ix++) {
+			result.push(this[ix]);
+		}
+		var commands = this.commands.slice(begin, end);
+		var path = new Path(result);
+		path.commands = commands;
+		return path;
+	}	
     
 	// parsePath
 	// ---------
