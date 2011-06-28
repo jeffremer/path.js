@@ -20,6 +20,18 @@ describe("Path", function() {
 			}
 			expect(throwy).toThrow("Invalid path " + invalidPathString);
 		});
+		
+		it("should reject out of order SVG path strings", function(){
+			var throwy = function(){
+				new Path("L 1 2 M 3 4");
+			}
+			expect(throwy).toThrow("Moveto may only appear at the beginning of a path");
+			
+			throwy = function(){
+				new Path("L 1 2 z 3 4");
+			}
+			expect(throwy).toThrow("Closepath may only appear at the end of a path");			
+		});
 	});
 	
 	describe("extends Array", function(){
@@ -29,6 +41,13 @@ describe("Path", function() {
 		
 		it("should be an instance of Array", function(){
 			expect(new Path(points)).toBeArray();
+		});
+		
+		it("should respond to array methods", function(){
+			path = new Path(points);
+			expect(path[0]).toEqual(points[0]);
+			path.push([10,20])
+			expect(path.pop()).toEqual([10,20]);
 		});
 	});
 	
@@ -66,6 +85,7 @@ describe("Path", function() {
 	}); 
 	
 	it("#toString should return a SVG path string", function(){
-		expect(new Path(pathStr).toString()).toEqual(pathStr);
+		expect(new Path(pathStr).toString(true)).toEqual(pathStr);
+		expect(new Path(pathStr).toString()).toEqual(pathStr.slice(0,pathStr.length-2));
 	});  
 });

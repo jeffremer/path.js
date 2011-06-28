@@ -8,6 +8,7 @@ SVG Path objects. It satisfies these requirements:
 * The constructor accepts an array of points ([x,y]) or a simplified SVG Path string 
 * `clone`, `map`, `filter`, `slice` all return new Path objects, not Arrays
 * `toString` returns the SVG Path as expected in a Path data attribute
+* Moveto may only appear at the beginning and closepath may optionally only appear at the end of a path
 
 
 Documentation
@@ -23,9 +24,23 @@ See the [project page documentation](http://jeffremer.com/path.js) for examples.
 Otherwise:
 
 ```javascript
-
 var path = new Path("M 1 2 L 3 4 l 1 2 z");
+// Behaves like an array
+path.pop() // [1,2]
+// Also has a commands property
+path.commands // [M, L, l, z]
+...
+```
 
+Compatability
+==============
+
+Node.js/CommonJS compatible. For example:
+
+```javascript
+var Path = require('./path.js').Path;
+var path = new Path("M 1 2 L 3 4 l 1 2 z");
+...
 ```
 
 Tests
